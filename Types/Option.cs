@@ -34,7 +34,7 @@ namespace Types
         public bool IsNone => _value == default(T);
 
 
-        public static Option<R> FMap<A, R>(Option<A> option, Func<A, R> function) where A : class where R : class
+        public static Option<R> Map<A, R>(Option<A> option, Func<A, R> function) where A : class where R : class
             => Bind(option, unwrapped => new Option<R>(function(unwrapped)));
 
         public static Option<R> Bind<A, R>(Option<A> option, Func<A, Option<R>> function) where A : class where R : class

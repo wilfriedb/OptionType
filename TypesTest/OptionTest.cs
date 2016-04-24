@@ -77,7 +77,7 @@ namespace TypesTest
             Func<string, string> function = s => s + "1";
 
             // Act
-            var result = Option<string>.FMap(option, function);
+            var result = Option<string>.Map(option, function);
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(Option<string>));
@@ -94,7 +94,7 @@ namespace TypesTest
             Func<string, string> function = s => s + "1";
 
             // Act
-            var result = Option<string>.FMap(option, function);
+            var result = Option<string>.Map(option, function);
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(Option<string>));
