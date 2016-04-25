@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Types
+namespace Iridium.Types
 {
     public struct Option<T> where T : class
     {
