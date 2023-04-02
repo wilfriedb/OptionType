@@ -1,52 +1,62 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿
+namespace Cursoriam.Types;
 
-namespace Iridium.Types
+public readonly struct Option<T>
 {
-    public struct Option<T> where T : class
+    private readonly bool hasItem;
+    private readonly T? _value;
+
+    public Option()
     {
-        private readonly T _value;
+        hasItem = false;
+    }
 
-        private Option(T referenceType)
+    public Option(T value)
+    {
+        if (value is null)
         {
-            _value = referenceType;
+            throw new NullReferenceException($"{nameof(value)} is null, check before use.");
         }
+        _value = value;
+        hasItem = true;
+    }
 
-        public T Value
+    public T Value
+    {
+        get
         {
-            get
+            if (_value == null)
             {
-                if (_value == null)
-                {
-                    throw new NullReferenceException("Option is None, check before use.");
-                }
-                return _value;
+                throw new NullReferenceException("Option is None, check before use.");
             }
-        }
-
-        public static Option<T> Some(T value) => new Option<T>(value);
-
-        public static Option<T> None() => Some(default(T));
-
-        public bool IsSome => !IsNone;
-
-        public bool IsNone => _value == default(T);
-
-
-        public static Option<R> Map<A, R>(Option<A> option, Func<A, R> function) where A : class where R : class
-            => Bind(option, unwrapped => new Option<R>(function(unwrapped)));
-
-        public static Option<R> Bind<A, R>(Option<A> option, Func<A, Option<R>> function) where A : class where R : class
-        {
-            if (option.IsSome)
-            {
-                var unwrapped = option.Value;
-                var result = function(unwrapped);
-                return result;
-            }
-            return Option<R>.None();
+            return _value;
         }
     }
 
+    public bool IsSome => hasItem;
+
+    public bool IsNone => !IsSome;
+
+    /// <summary>
+    /// The Select method is in functional programming languages also known as 
+    /// map (OCaml, python) or fmap (Haskell)
+    /// </summary>
+    /// <typeparam name="A"></typeparam>
+    /// <typeparam name="R"></typeparam>
+    /// <param name="option"></param>
+    /// <param name="selector"></param>
+    /// <returns></returns>
+    public Option<R> Select<R>(Func<T, R> selector)
+        => Bind(unwrapped => new Option<R>(selector(unwrapped)));
+
+    public Option<R> Bind<R>(Func<T, Option<R>> function)
+    {
+        if (IsSome)
+        {
+            var unwrapped = Value;
+            var result = function(unwrapped);
+            return result;
+        }
+        return new Option<R>();
+    }
 }
