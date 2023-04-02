@@ -1,13 +1,10 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Iridium.Types;
+﻿using Iridium.Types;
 
 namespace TypesTest
 {
-    [TestClass]
     public class OptionTest
     {
-        [TestMethod]
+        [Fact]
         public void Option_With_Value_Returns_Value()
         {
             // Arrange
@@ -17,13 +14,13 @@ namespace TypesTest
             var option = Option<string>.Some(simpleType);
 
             // Assert
-            Assert.IsInstanceOfType(option, typeof(Option<string>));
-            Assert.IsTrue(option.IsSome);
-            Assert.IsFalse(option.IsNone);
-            Assert.AreEqual(option.Value, simpleType);
+            Assert.IsType<Option<string>>(option);
+            Assert.True(option.IsSome);
+            Assert.False(option.IsNone);
+            Assert.Equal(simpleType, option.Value);
         }
 
-        [TestMethod]
+        [Fact]
         public void Option_WithOut_Value_Returns_None()
         {
             // Arrange
@@ -33,13 +30,12 @@ namespace TypesTest
             var option = Option<string>.Some(simpleType);
 
             // Assert
-            Assert.IsInstanceOfType(option, typeof(Option<string>));
-            Assert.IsTrue(option.IsNone);
-            Assert.IsFalse(option.IsSome);
+            Assert.IsType<Option<string>>(option);
+            Assert.True(option.IsNone);
+            Assert.False(option.IsSome);
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(NullReferenceException))]
+        [Fact]
         public void Option_WithOut_Value_Throws_Exception_When_Value_Is_Accessed_()
         {
             // Arrange
@@ -49,12 +45,11 @@ namespace TypesTest
             var option = Option<string>.Some(simpleType);
 
             // Assert
-            Assert.IsTrue(option.IsNone);
-            var value = option.Value;
+            Assert.True(option.IsNone);
+            Assert.Throws<NullReferenceException>(() => { var value = option.Value; });
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(NullReferenceException))]
+        [Fact]
         public void Option_None_Throws_Exception_When_Value_Is_Accessed_()
         {
             // Arrange
@@ -64,12 +59,12 @@ namespace TypesTest
             var option = Option<string>.None();
 
             // Assert
-            Assert.IsInstanceOfType(option, typeof(Option<string>));
-            Assert.IsTrue(option.IsNone);
-            var value = option.Value;
+            Assert.IsType<Option<string>>(option);
+            Assert.True(option.IsNone);
+            Assert.Throws<NullReferenceException>(() => { var value = option.Value; });
         }
 
-        [TestMethod]
+        [Fact]
         public void FMap_With_Option_Some_returns_Value()
         {
             // Arrange
@@ -80,13 +75,13 @@ namespace TypesTest
             var result = Option<string>.Map(option, function);
 
             // Assert
-            Assert.IsInstanceOfType(result, typeof(Option<string>));
-            Assert.IsTrue(result.IsSome);
-            Assert.IsFalse(result.IsNone);
-            Assert.AreEqual(result.Value, "Test1");
+            Assert.IsType<Option<string>>(result);
+            Assert.True(result.IsSome);
+            Assert.False(result.IsNone);
+            Assert.Equal("Test1", result.Value);
         }
 
-        [TestMethod]
+        [Fact]
         public void FMap_With_Option_None_returns_None()
         {
             // Arrange
@@ -97,9 +92,9 @@ namespace TypesTest
             var result = Option<string>.Map(option, function);
 
             // Assert
-            Assert.IsInstanceOfType(result, typeof(Option<string>));
-            Assert.IsTrue(result.IsNone);
-            Assert.IsFalse(result.IsSome);
+            Assert.IsType<Option<string>>(result);
+            Assert.True(result.IsNone);
+            Assert.False(result.IsSome);
         }
     }
 
