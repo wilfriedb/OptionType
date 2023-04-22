@@ -1,7 +1,4 @@
-﻿using Cursoriam.Types;
-using System.Linq;
-
-namespace TypesTests;
+﻿namespace Cursoriam.Types.Tests.OptionType;
 
 public class QuerySyntaxTests
 {

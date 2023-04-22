@@ -1,6 +1,4 @@
-﻿using Cursoriam.Types;
-
-namespace TypesTests;
+﻿namespace Cursoriam.Types.Tests.OptionType;
 
 // https://blog.ploeh.dk/2018/03/26/the-maybe-functor/
 
@@ -30,9 +28,9 @@ public class FunctorLawsTests
         Assert.Equal(option, option.Select(identity));
     }
 
+    [Theory]
     [InlineData("odd")]
     [InlineData("even")]
-    [Theory]
     public void PopulatedOptionObeysSecondFunctorLaw(string value)
     {
         // Arrange

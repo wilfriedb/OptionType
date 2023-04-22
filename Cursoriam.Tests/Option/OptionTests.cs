@@ -1,8 +1,6 @@
-﻿using Cursoriam.Types;
+﻿namespace Cursoriam.Types.Tests.OptionType;
 
-namespace TypesTests;
-
-public class OptionTest
+public class OptionTests
 {
     [Fact]
     public void Option_With_Value_Returns_Value()

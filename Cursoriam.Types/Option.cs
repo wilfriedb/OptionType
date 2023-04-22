@@ -4,7 +4,7 @@ namespace Cursoriam.Types;
 public readonly struct Option<T>
 {
     private readonly bool hasItem;
-    private readonly T? _value;
+    private readonly T? item;
 
     public Option()
     {
@@ -17,7 +17,7 @@ public readonly struct Option<T>
         {
             throw new NullReferenceException($"{nameof(value)} is null, check before use.");
         }
-        _value = value;
+        item = value;
         hasItem = true;
     }
 
@@ -25,17 +25,19 @@ public readonly struct Option<T>
     {
         get
         {
-            if (_value == null)
+            if (item == null)
             {
                 throw new NullReferenceException("Option is None, check before use.");
             }
-            return _value;
+            return item;
         }
     }
 
     public bool IsSome => hasItem;
 
     public bool IsNone => !IsSome;
+
+    public static Option<T> Return(T value) => new(value);
 
     /// <summary>
     /// The Select method is in functional programming languages also known as 
@@ -47,9 +49,13 @@ public readonly struct Option<T>
     /// <param name="selector"></param>
     /// <returns></returns>
     public Option<R> Select<R>(Func<T, R> selector)
-        => Bind(unwrapped => new Option<R>(selector(unwrapped)));
+        => SelectMany(unwrapped => Option<R>.Return(selector(unwrapped)));
 
-    public Option<R> Bind<R>(Func<T, Option<R>> function)
+    /// <summary>
+    /// The SelectMany method is in functional programming languages also known as
+    /// bind (OCaml, python) or flatMap (Haskell)
+    /// </summary>
+    public Option<R> SelectMany<R>(Func<T, Option<R>> function)
     {
         if (IsSome)
         {
@@ -59,4 +65,10 @@ public readonly struct Option<T>
         }
         return new Option<R>();
     }
+}
+
+public static class OptionExtensions
+{
+    public static Option<R> Flatten<R>(this Option<Option<R>> option)
+       => option.SelectMany(x => x);
 }
