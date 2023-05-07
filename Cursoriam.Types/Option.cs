@@ -3,10 +3,13 @@ namespace Cursoriam.Types;
 
 public readonly struct Option<T>
 {
-    private readonly T? item;
+    private readonly T? value;
+    // hasValue is necessary to be able to handle both reference types and value types
+    private readonly bool hasValue;
 
     public Option()
     {
+        hasValue = false;
     }
 
     public Option(T value)
@@ -15,7 +18,8 @@ public readonly struct Option<T>
         {
             throw new ArgumentNullException(nameof(value));
         }
-        item = value;
+        this.value = value;
+        hasValue = true;
     }
 
     // public T Value
@@ -30,10 +34,10 @@ public readonly struct Option<T>
     //     }
     // }
 
-    [MemberNotNullWhen(true, nameof(item))]
-    public bool IsSome => item is not null;
+    [MemberNotNullWhen(true, nameof(value))]
+    public bool IsSome => hasValue;
 
-    [MemberNotNullWhen(false, nameof(item))]
+    [MemberNotNullWhen(false, nameof(value))]
     public bool IsNone => !IsSome;
 
     public static Option<T> Return(T value) => new(value);
@@ -58,14 +62,14 @@ public readonly struct Option<T>
     {
         if (IsSome)
         {
-            var result = function(item);
+            var result = function(value);
             return result;
         }
         return new Option<R>();
     }
 
     public override string ToString()
-        => IsSome ? $"Some({item})" : "None";
+        => IsSome ? $"Some({value})" : "None";
 }
 
 public static class OptionExtensions

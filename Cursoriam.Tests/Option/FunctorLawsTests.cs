@@ -52,7 +52,10 @@ public class FunctorLawsTests
         var option = new Option<string>();
 
         // Act
+        var left = option.Select(g).Select(f);
+        var right = option.Select(s => f(g(s)));
+
         // Assert
-        Assert.Equal(option.Select(g).Select(f), option.Select(s => f(g(s))));
+        Assert.Equal(left, right);
     }
 }
