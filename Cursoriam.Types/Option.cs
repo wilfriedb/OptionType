@@ -1,40 +1,39 @@
-﻿
+﻿using System.Diagnostics.CodeAnalysis;
 namespace Cursoriam.Types;
 
 public readonly struct Option<T>
 {
-    private readonly bool hasItem;
     private readonly T? item;
 
     public Option()
     {
-        hasItem = false;
     }
 
     public Option(T value)
     {
         if (value is null)
         {
-            throw new NullReferenceException($"{nameof(value)} is null, check before use.");
+            throw new ArgumentNullException(nameof(value));
         }
         item = value;
-        hasItem = true;
     }
 
-    public T Value
-    {
-        get
-        {
-            if (item == null)
-            {
-                throw new NullReferenceException("Option is None, check before use.");
-            }
-            return item;
-        }
-    }
+    // public T Value
+    // {
+    //     get
+    //     {
+    //         if (item == null)
+    //         {
+    //             throw new NullReferenceException("Option is None, check before use.");
+    //         }
+    //         return item;
+    //     }
+    // }
 
-    public bool IsSome => hasItem;
+    [MemberNotNullWhen(true, nameof(item))]
+    public bool IsSome => item is not null;
 
+    [MemberNotNullWhen(false, nameof(item))]
     public bool IsNone => !IsSome;
 
     public static Option<T> Return(T value) => new(value);
@@ -59,12 +58,14 @@ public readonly struct Option<T>
     {
         if (IsSome)
         {
-            var unwrapped = Value;
-            var result = function(unwrapped);
+            var result = function(item);
             return result;
         }
         return new Option<R>();
     }
+
+    public override string ToString()
+        => IsSome ? $"Some({item})" : "None";
 }
 
 public static class OptionExtensions

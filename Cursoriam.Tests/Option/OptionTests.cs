@@ -15,7 +15,7 @@ public class OptionTests
         Assert.IsType<Option<string>>(option);
         Assert.True(option.IsSome);
         Assert.False(option.IsNone);
-        Assert.Equal(simpleType, option.Value);
+        option.Select(v => { Assert.Equal(simpleType, v); return v; });
     }
 
     [Fact]
@@ -33,14 +33,14 @@ public class OptionTests
     }
 
     [Fact]
-    public void Option_WithOut_Value_Throws_Exception_When_Value_Is_Accessed_()
+    public void Option_WithOut_Value_Throws_Exception_When_Option_Is_Created_()
     {
         // Arrange
         const string? simpleType = null;
 
         // Act
         // Assert
-        Assert.Throws<NullReferenceException>(() => new Option<string>(simpleType!));
+        Assert.Throws<ArgumentNullException>(() => new Option<string>(simpleType!));
     }
 
     [Fact]
@@ -53,11 +53,11 @@ public class OptionTests
         // Assert
         Assert.IsType<Option<string>>(option);
         Assert.True(option.IsNone);
-        Assert.Throws<NullReferenceException>(() => { var value = option.Value; });
+        option.Select(v=> { Assert.Fail("This cod should not be reached."); return v; });
     }
 
     [Fact]
-    public void FMap_With_Option_Some_returns_Value()
+    public void Map_With_Option_Some_returns_Value()
     {
         // Arrange
         var option = new Option<string>("Test");
@@ -69,11 +69,11 @@ public class OptionTests
         // Assert
         Assert.IsType<Option<string>>(result);
         Assert.True(result.IsSome);
-        Assert.Equal("Test1", result.Value);
+        result.Select(v => { Assert.Equal("Test1", v); return v; });
     }
 
     [Fact]
-    public void FMap_With_Option_None_returns_None()
+    public void Map_With_Option_None_returns_None()
     {
         // Arrange
         var option = new Option<string>();
@@ -88,7 +88,7 @@ public class OptionTests
     }
 
     [Fact]
-    public void FMap_With_Different_Types_Option_Some_returns_Value()
+    public void Map_With_Different_Types_Option_Some_returns_Value()
     {
         // Arrange
         var option = new Option<int>(42);
@@ -100,7 +100,7 @@ public class OptionTests
         // Assert
         Assert.IsType<Option<string>>(result);
         Assert.True(result.IsSome);
-        Assert.Equal("42test", result.Value);
+        result.Select(v => { Assert.Equal("42test", v); return v; });
     }
 
 }
