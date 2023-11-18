@@ -1,7 +1,8 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System.Collections;
+using System.Diagnostics.CodeAnalysis;
 namespace Cursoriam.Types;
 
-public readonly struct Option<T>
+public readonly struct Option<T> : IEnumerable<T>
 {
     private readonly T? value;
     // hasValue is necessary to be able to handle both reference types and value types
@@ -70,6 +71,24 @@ public readonly struct Option<T>
 
     public override string ToString()
         => IsSome ? $"Some({value})" : "None";
+
+    public IEnumerator<T> GetEnumerator()
+    {
+        return AsEnumerable().GetEnumerator();
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return AsEnumerable().GetEnumerator();
+    }
+
+    public IEnumerable<T> AsEnumerable()
+    {
+        if (IsSome)
+        {
+            yield return value;
+        }
+    }
 }
 
 public static class OptionExtensions

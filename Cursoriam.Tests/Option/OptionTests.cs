@@ -16,6 +16,7 @@ public class OptionTests
         Assert.True(option.IsSome);
         Assert.False(option.IsNone);
         option.Select(v => { Assert.Equal(simpleType, v); return v; });
+        Assert.True(option.Any());
     }
 
     [Fact]
@@ -30,6 +31,7 @@ public class OptionTests
         Assert.IsType<Option<string>>(option);
         Assert.True(option.IsNone);
         Assert.False(option.IsSome);
+        Assert.False(option.Any());
     }
 
     [Fact]
@@ -53,7 +55,7 @@ public class OptionTests
         // Assert
         Assert.IsType<Option<string>>(option);
         Assert.True(option.IsNone);
-        option.Select(v=> { Assert.Fail("This cod should not be reached."); return v; });
+        option.Select(v=> { Assert.Fail("This code should not be reached."); return v; });
     }
 
     [Fact]
